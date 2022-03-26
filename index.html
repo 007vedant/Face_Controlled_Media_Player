@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <title>
+      Faced Controlled Web Player
+    </title>
+    <script src="canvas.js"></script>
+    <script src="pico.js"></script>
+  </head>
+  <script>
+    var initialized = false;
+    function button_callback() {
+      console.log('Called!');
+      if (initialized) return; // check if face detection has started
+      var update_memory = pico.instantiate_detection_memory(5); // last 5 frames
+      var facefinder_classify_region = function (r, c, s, pixels, ldim) {
+        return -1.0;
+      };
+      var cascadeurl =
+        'https://raw.githubusercontent.com/nenadmarkus/pico/c2e81f9d23cc11d1a612fd21e4f9de0921a5d0d9/rnt/cascades/facefinder';
+      fetch(cascadeurl).then(function (response) {
+        response.arrayBuffer().then(function (buffer) {
+          var bytes = new Int8Array(buffer);
+          facefinder_classify_region = pico.unpack_cascade(bytes);
+          console.log('* facefinder loaded');
+        });
+      });
+
+      var ctx = document.getElementsByTagName('canvas')[0].getContext('2d');
+      function rgba_to_grayscale(rgba, nrows, ncols) {
+        var gray = new Uint8Array(nrows * ncols);
+        for (var r = 0; r < nrows; ++r)
+          for (var c = 0; c < ncols; ++c)
+            gray[r * ncols + c] =
+              (2 * rgba[r * 4 * ncols + 4 * c + 0] +
+                7 * rgba[r * 4 * ncols + 4 * c + 1] +
+                1 * rgba[r * 4 * ncols + 4 * c + 2]) /
+              10;
+        return gray;
+      }
+
+      var processfn = function (video, dt) {
+        ctx.drawImage(video, 0, 0);
+        var rgba = ctx.getImageData(0, 0, 640, 480).data;
+        image = {
+          pixels: rgba_to_grayscale(rgba, 480, 640),
+          nrows: 480,
+          ncols: 640,
+          ldim: 640,
+        };
+        params = {
+          shiftfactor: 0.1, 
+          minsize: 100,
+          maxsize: 1000,
+          scalefactor: 1.1,
+        };
+
+        dets = pico.run_cascade(image, facefinder_classify_region, params);
+        dets = update_memory(dets);
+        dets = pico.cluster_detections(dets, 0.2);
+
+        const videoEle = document.querySelector('#video-player');
+        const toggle = document.querySelector('#toggle');
+        if (toggle.value === 'true') {
+          if (dets.length === 0) {
+            videoEle.pause();
+          } else {
+            videoEle.play();
+          }
+        }
+      };
+      /*
+		    initialize camera handling
+			*/
+      var mycanvas = new canvas(ctx, processfn);
+      initialized = true;
+    }
+  </script>
+  <body>
+    <input type="text" value="true" id="toggle" style="visibility: hidden" />
+    <div id="basic" style="text-align: center">
+      <video
+        style="height: 0px"
+        class="videostream"
+        autoplay=""
+        controls
+      ></video>
+      <audio class="audiostream" autoplay=""></audio>
+      <p>
+        <button id="start-button" onclick="button_callback()">Start</button>
+        <button id="stop-button">Play/Pause</button>
+        <button id="unmute-button">Unmute</button>
+        <button id="mute-button">Mute</button>
+      </p>
+    </div>
+    <p>
+      <center>
+        <canvas width="640" height="480"></canvas>
+      </center>
+    </p>
+    <hr />
+    <div style="text-align: center">
+      <input type="file" id="file-selector" /><br /><br />
+      <video width="427" height="240" id="video-player" controls></video>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
