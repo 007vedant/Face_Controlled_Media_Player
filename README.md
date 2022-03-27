@@ -15,6 +15,7 @@ The application imitates user actions over camera feed, on the media player. Whe
 3. Pause your webcam or mute yourself to see the same action reflected on the video player.
 4. Step away from the camera to see the video get automatically paused.
 
-# Demo Video: 
+# Video Demo:
+**https://drive.google.com/file/d/1NBXQafQghn8oogHFMvvXObXtuMPs4hCR/view?usp=sharing**
 # Author
 👷‍♂️ [**Vedant Raghuwanshi**](https://www.linkedin.com/in/vedantraghuwanshi/)
