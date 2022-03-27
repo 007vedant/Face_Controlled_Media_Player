@@ -12,7 +12,6 @@
   <script>
     var initialized = false;
     function button_callback() {
-      console.log('Called!');
       if (initialized) return; // check if face detection has started
       var update_memory = pico.instantiate_detection_memory(5); // last 5 frames
       var facefinder_classify_region = function (r, c, s, pixels, ldim) {
@@ -63,9 +62,11 @@
 
         const videoEle = document.querySelector('#video-player');
         const toggle = document.querySelector('#toggle');
+        
         if (toggle.value === 'true') {
           if (dets.length === 0) {
             videoEle.pause();
+            alert("Please come infront of webcam!");
           } else {
             videoEle.play();
           }
