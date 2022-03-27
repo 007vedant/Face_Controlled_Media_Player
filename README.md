@@ -1,5 +1,5 @@
 # Face_Controlled_Media_Player
-The application imitates user actions over camera feed, on the media player. Whenever the user pauses his camera feed or mutes himself, the video also gets paused or muted. Using facial recognition, the application also tracks the presence of user in the camera feed and whenever he/she gets away from the webcam, the video is paused automatically.
+The application imitates user actions over camera feed, on the media player. Whenever the user pauses his camera feed or mutes himself, the video also gets paused or muted. Using facial recognition, the application also tracks the presence of user in the camera feed and whenever he/she gets away from the webcam, the video is paused automatically and an alert is raised asking the user to face the webcam.
 
 # Tech Stack
 - HTML/CSS
