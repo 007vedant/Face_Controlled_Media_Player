@@ -16,6 +16,6 @@ The application imitates user actions over camera feed, on the media player. Whe
 4. Step away from the camera to see the video get automatically paused.
 
 # Video Demo:
-**https://drive.google.com/file/d/1NBXQafQghn8oogHFMvvXObXtuMPs4hCR/view?usp=sharing**
+**https://drive.google.com/file/d/12t6uGuwdvPjrfOyV9Lbgr-VBI7HwpGQc/view?usp=sharing**
 # Author
 👷‍♂️ [**Vedant Raghuwanshi**](https://www.linkedin.com/in/vedantraghuwanshi/)
